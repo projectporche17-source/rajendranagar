@@ -1,164 +1,147 @@
-import React, { useState } from 'react';
-
-interface Property {
-  id: string;
-  title: string;
-  price: string;
-  area: string;
-  size: string;
-  image?: string;
-}
+import React, { useEffect, useState } from 'react';
+import { IconWhatsApp, IconPhone } from './components/Icons';
+import { Link } from './components/Link';
+import Admin from './pages/Admin';
+import Home from './pages/Home';
+import AreaPage from './pages/AreaPage';
+import PropertyDetail from './pages/PropertyDetail';
+import PrivacyPolicy from './pages/PrivacyPolicy';
+import Terms from './pages/Terms';
+import Contact from './pages/Contact';
+import Sitemap from './pages/Sitemap';
 
 const App: React.FC = () => {
-  const [properties] = useState<Property[]>([
-    {
-      id: '1',
-      title: '3BHK Apartment - Kismatpur',
-      price: '₹1.25 Cr',
-      area: 'Kismatpur',
-      size: '1670 SqFt',
-      image: 'https://via.placeholder.com/400x300?text=Property+1'
-    },
-    {
-      id: '2',
-      title: '2BHK Villa - Madhapur',
-      price: '₹85 Lakhs',
-      area: 'Madhapur',
-      size: '1200 SqFt',
-      image: 'https://via.placeholder.com/400x300?text=Property+2'
-    },
-    {
-      id: '3',
-      title: '4BHK House - Rajendranagar',
-      price: '₹2.5 Cr',
-      area: 'Rajendranagar',
-      size: '2500 SqFt',
-      image: 'https://via.placeholder.com/400x300?text=Property+3'
-    }
-  ]);
+  const [path, setPath] = useState(window.location.pathname);
 
+  useEffect(() => {
+    const onPopState = () => setPath(window.location.pathname);
+    window.addEventListener('popstate', onPopState);
+    return () => window.removeEventListener('popstate', onPopState);
+  }, []);
+
+  // Router Logic using Clean URLs
+  let Component = <Home />;
+  
+  if (path === '/admin') {
+    Component = <Admin />;
+  } else if (path.startsWith('/area/')) {
+    const areaName = decodeURIComponent(path.replace('/area/', ''));
+    Component = <AreaPage areaName={areaName} />;
+  } else if (path.startsWith('/p/')) {
+    const id = path.replace('/p/', '');
+    Component = <PropertyDetail propertyId={id} />;
+  } else if (path === '/privacy') {
+    Component = <PrivacyPolicy />;
+  } else if (path === '/terms') {
+    Component = <Terms />;
+  } else if (path === '/contact') {
+    Component = <Contact />;
+  } else if (path === '/sitemap') {
+    Component = <Sitemap />;
+  } else {
+    // Default to Home if root or unknown
+    Component = <Home />;
+  }
+
+  // Admin Layout
+  if (path === '/admin') {
+    return (
+      <div className="min-h-screen bg-gray-50 text-slate-800 font-sans">
+        <nav className="bg-white border-b border-gray-200 px-4 py-3 sticky top-0 z-50">
+          <div className="max-w-5xl mx-auto flex justify-between items-center">
+            <Link href="/" className="font-bold text-lg tracking-tight hover:text-blue-600 transition-colors">
+              rajendranagar.online
+            </Link>
+            <div className="text-sm text-gray-500 font-medium bg-gray-100 px-2 py-1 rounded">Admin Portal</div>
+          </div>
+        </nav>
+        <main>{Component}</main>
+        <footer className="mt-12 py-6 text-center text-xs text-gray-400 border-t">
+          &copy; {new Date().getFullYear()} Rajendra Nagar Realty
+        </footer>
+      </div>
+    );
+  }
+
+  // Public Layout
   return (
     <div className="min-h-screen bg-white text-slate-800 font-sans flex flex-col">
-      {/* Navigation */}
+      {/* Public Navbar */}
       <nav className="bg-white/80 backdrop-blur-md border-b border-gray-100 px-4 py-3 sticky top-0 z-50">
         <div className="max-w-5xl mx-auto flex justify-between items-center">
-          <a href="#/" className="font-extrabold text-xl tracking-tight text-slate-900">
+          <Link href="/" className="font-extrabold text-xl tracking-tight text-slate-900">
             rajendranagar.online
-          </a>
+          </Link>
+          
           <a 
             href="https://wa.me/916281256601"
             target="_blank"
             rel="noopener noreferrer"
             className="flex items-center gap-2 bg-green-50 text-green-700 px-3 py-1.5 rounded-full text-sm font-semibold hover:bg-green-100 transition-colors"
           >
-            <span>💬</span>
+            <IconWhatsApp className="w-4 h-4" />
             <span className="hidden sm:inline">Contact Agent</span>
           </a>
         </div>
       </nav>
 
-      {/* Main Content */}
       <main className="flex-grow">
-        {/* Hero Section */}
-        <div className="bg-gradient-to-r from-slate-900 to-slate-800 text-white py-16 px-4">
-          <div className="max-w-5xl mx-auto text-center">
-            <h1 className="text-5xl font-bold mb-4">Rajendra Nagar Properties</h1>
-            <p className="text-xl text-slate-300 mb-8">Find your dream property in Rajendra Nagar with verified listings and exact locations.</p>
-            <div className="flex gap-4 justify-center">
-              <a href="#/properties" className="bg-blue-600 hover:bg-blue-700 text-white px-6 py-2 rounded-lg font-semibold transition-colors">Browse Properties</a>
-              <a href="https://wa.me/916281256601" className="bg-green-600 hover:bg-green-700 text-white px-6 py-2 rounded-lg font-semibold transition-colors">List Your Property</a>
-            </div>
-          </div>
-        </div>
-
-        {/* Properties Grid */}
-        <div className="max-w-5xl mx-auto px-4 py-16">
-          <h2 className="text-3xl font-bold mb-8">Featured Properties</h2>
-          <div className="grid md:grid-cols-3 gap-6">
-            {properties.map((property) => (
-              <div key={property.id} className="border border-gray-200 rounded-lg overflow-hidden hover:shadow-lg transition-shadow">
-                <img 
-                  src={property.image} 
-                  alt={property.title}
-                  className="w-full h-48 object-cover bg-gray-200"
-                />
-                <div className="p-4">
-                  <h3 className="text-lg font-bold mb-2">{property.title}</h3>
-                  <p className="text-2xl font-bold text-blue-600 mb-2">{property.price}</p>
-                  <div className="space-y-1 text-sm text-slate-600">
-                    <p>📍 {property.area}</p>
-                    <p>📏 {property.size}</p>
-                  </div>
-                  <a href={`#/p/${property.id}`} className="block mt-4 text-center bg-blue-50 text-blue-600 font-semibold py-2 rounded hover:bg-blue-100 transition-colors">
-                    View Details
-                  </a>
-                </div>
-              </div>
-            ))}
-          </div>
-        </div>
-
-        {/* Why Choose Us */}
-        <div className="bg-slate-50 py-16 px-4">
-          <div className="max-w-5xl mx-auto">
-            <h2 className="text-3xl font-bold text-center mb-12">Why Choose Us</h2>
-            <div className="grid md:grid-cols-4 gap-6">
-              <div className="text-center">
-                <div className="text-4xl mb-3">✓</div>
-                <h3 className="font-bold mb-2">Verified Properties</h3>
-                <p className="text-sm text-slate-600">Only genuine, verified listings</p>
-              </div>
-              <div className="text-center">
-                <div className="text-4xl mb-3">📍</div>
-                <h3 className="font-bold mb-2">Exact Locations</h3>
-                <p className="text-sm text-slate-600">Google Maps integration for accuracy</p>
-              </div>
-              <div className="text-center">
-                <div className="text-4xl mb-3">⚡</div>
-                <h3 className="font-bold mb-2">Ultra Fast</h3>
-                <p className="text-sm text-slate-600">Lightning-fast loading speeds</p>
-              </div>
-              <div className="text-center">
-                <div className="text-4xl mb-3">💰</div>
-                <h3 className="font-bold mb-2">No Brokerage</h3>
-                <p className="text-sm text-slate-600">Direct seller contact only</p>
-              </div>
-            </div>
-          </div>
-        </div>
+        {Component}
       </main>
+      
+      <footer className="bg-slate-900 text-slate-300 py-12 text-sm border-t border-slate-800 mt-auto">
+        <div className="max-w-5xl mx-auto px-4 grid grid-cols-1 md:grid-cols-3 gap-8 text-center md:text-left">
+          
+          {/* Column 1: About */}
+          <div>
+            <h3 className="text-white font-bold text-lg mb-4">About rajendranagar.online</h3>
+            <p className="text-slate-400 leading-relaxed mb-4 text-sm">
+              The most trusted real estate platform for Rajendra Nagar. We list only <strong>verified properties</strong> with no public posting allowed, ensuring quality and safety.
+            </p>
+            <p className="text-slate-400 text-sm mb-4">
+              <strong>No Brokerage:</strong> We charge a small listing fee, not a commission. We stand against fake listings and unnecessary brokerage fees.
+            </p>
+            <p className="text-slate-400 text-sm">
+              <strong>Trusted by:</strong> Google, Microsoft, & Govt Employees.
+            </p>
+          </div>
 
-      {/* Footer */}
-      <footer className="bg-slate-900 text-slate-300 py-12 px-4 border-t border-slate-800">
-        <div className="max-w-5xl mx-auto">
-          <div className="grid md:grid-cols-3 gap-8 mb-8">
-            <div>
-              <h4 className="text-white font-bold text-lg mb-4">About</h4>
-              <p className="text-sm">The most trusted real estate platform for Rajendra Nagar with verified properties and exact locations.</p>
-            </div>
-            <div>
-              <h4 className="text-white font-bold text-lg mb-4">Links</h4>
-              <ul className="space-y-2 text-sm">
-                <li><a href="#/" className="hover:text-white transition-colors">Home</a></li>
-                <li><a href="#/privacy" className="hover:text-white transition-colors">Privacy Policy</a></li>
-                <li><a href="#/terms" className="hover:text-white transition-colors">Terms & Conditions</a></li>
-              </ul>
-            </div>
-            <div>
-              <h4 className="text-white font-bold text-lg mb-4">Contact</h4>
-              <div className="space-y-2 text-sm">
-                <a href="tel:+916281256601" className="flex items-center gap-2 hover:text-white transition-colors">
-                  <span>📞</span> +91-628-125-6601
-                </a>
-                <a href="https://wa.me/916281256601" className="flex items-center gap-2 hover:text-white transition-colors">
-                  <span>💬</span> WhatsApp
-                </a>
-              </div>
-            </div>
+          {/* Column 2: Quick Links */}
+          <div>
+            <h4 className="text-white font-semibold mb-4 text-base">Quick Links</h4>
+            <ul className="space-y-3">
+              <li><Link href="/" className="hover:text-white transition-colors">Home Properties</Link></li>
+              <li><Link href="/contact" className="hover:text-white transition-colors">Contact Us</Link></li>
+              <li><Link href="/privacy" className="hover:text-white transition-colors">Privacy Policy</Link></li>
+              <li><Link href="/terms" className="hover:text-white transition-colors">Terms & Conditions</Link></li>
+              <li><Link href="/sitemap" className="hover:text-white transition-colors">Sitemap</Link></li>
+            </ul>
           </div>
-          <div className="border-t border-slate-800 pt-8 text-center text-xs">
-            <p>&copy; {new Date().getFullYear()} Rajendra Nagar Realty. All rights reserved.</p>
+
+          {/* Column 3: Contact */}
+          <div>
+             <h4 className="text-white font-semibold mb-4 text-base">Get in Touch</h4>
+             <p className="mb-2 text-slate-400">Call or WhatsApp us for listing or buying:</p>
+             <div className="flex flex-col gap-3 items-center md:items-start">
+               <a href="tel:+916281256601" className="flex items-center gap-2 text-white hover:text-blue-400 transition-colors">
+                 <IconPhone className="w-4 h-4" />
+                 <span className="font-bold">Call Now</span>
+               </a>
+               <a href="https://wa.me/916281256601" className="flex items-center gap-2 text-white hover:text-green-400 transition-colors">
+                 <IconWhatsApp className="w-4 h-4" />
+                 <span className="font-bold">WhatsApp Chat</span>
+               </a>
+             </div>
+             
+             <p className="mt-6 text-xs text-slate-500">
+               Property Owner? <Link href="/admin" className="underline hover:text-slate-300">Admin Login</Link>
+             </p>
           </div>
+        </div>
+
+        <div className="max-w-5xl mx-auto px-4 mt-12 pt-8 border-t border-slate-800 text-center text-slate-600 text-xs flex flex-col md:flex-row justify-between items-center gap-2">
+          <span>&copy; {new Date().getFullYear()} Rajendra Nagar Realty. All rights reserved.</span>
+          <span>Designed for speed and simplicity.</span>
         </div>
       </footer>
     </div>
