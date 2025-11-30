@@ -1,0 +1,16 @@
+{
+  "pages_build_caching": true,
+  "build": {
+    "command": "npm run build",
+    "cwd": "/",
+    "root": "."
+  },
+  "env": {
+    "production": {
+      "build": {
+        "command": "npm run build",
+        "cwd": "/"
+      }
+    }
+  }
+}
