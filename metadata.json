@@ -1,8 +1,4 @@
 {
-  "name": "EPTP - Enscripted Person To Person",
-  "description": "A lightweight, serverless, end-to-end encrypted P2P messaging app using WebRTC and manual signaling.",
-  "requestFramePermissions": [
-    "camera",
-    "microphone"
-  ]
+  "name": "rajendranagar.online",
+  "description": "A simple, fast real estate listing management system for Rajendra Nagar area."
 }
