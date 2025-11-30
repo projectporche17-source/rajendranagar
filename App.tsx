@@ -1,11 +1,11 @@
 import React, { useEffect, useState } from 'react';
-import Admin from './pages/Admin';
-import Home from './pages/Home';
-import AreaPage from './pages/AreaPage';
-import PropertyDetail from './pages/PropertyDetail';
-import PrivacyPolicy from './pages/PrivacyPolicy';
-import Terms from './pages/Terms';
-import Contact from './pages/Contact';
+import Admin from './pages/Admin.tsx';
+import Home from './pages/Home.tsx';
+import AreaPage from './pages/AreaPage.tsx';
+import PropertyDetail from './pages/PropertyDetail.tsx';
+import PrivacyPolicy from './pages/PrivacyPolicy.tsx';
+import Terms from './pages/Terms.tsx';
+import Contact from './pages/Contact.tsx';
 
 const App: React.FC = () => {
   const [route, setRoute] = useState(window.location.hash || '#/');
