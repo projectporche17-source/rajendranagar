@@ -1,5 +1,4 @@
 import React, { useEffect, useState } from 'react';
-import { IconWhatsApp, IconPhone } from './components/Icons';
 import Admin from './pages/Admin';
 import Home from './pages/Home';
 import AreaPage from './pages/AreaPage';
@@ -75,7 +74,7 @@ const App: React.FC = () => {
             rel="noopener noreferrer"
             className="flex items-center gap-2 bg-green-50 text-green-700 px-3 py-1.5 rounded-full text-sm font-semibold hover:bg-green-100 transition-colors"
           >
-            <IconWhatsApp className="w-4 h-4" />
+            <span className="text-lg">💬</span>
             <span className="hidden sm:inline">Contact Agent</span>
           </a>
         </div>
@@ -119,11 +118,11 @@ const App: React.FC = () => {
              <p className="mb-2 text-slate-400">Call or WhatsApp us for listing or buying:</p>
              <div className="flex flex-col gap-3 items-center md:items-start">
                <a href="tel:+916281256601" className="flex items-center gap-2 text-white hover:text-blue-400 transition-colors">
-                 <IconPhone className="w-4 h-4" />
+                 <span className="text-lg">📞</span>
                  <span className="font-bold">Call Now</span>
                </a>
                <a href="https://wa.me/916281256601" className="flex items-center gap-2 text-white hover:text-green-400 transition-colors">
-                 <IconWhatsApp className="w-4 h-4" />
+                 <span className="text-lg">💬</span>
                  <span className="font-bold">WhatsApp Chat</span>
                </a>
              </div>
